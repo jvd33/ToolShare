@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<h1 class="page-header">Borrow Requests</h1>
+
+{% if some == 1 %}
+<h2>You have no pending requests</h2>
+
+{% else %}
+<h2>Requests pending approval</h2>
+
+<table class="table table-striped table-hover ">
+    <thead>
+      <tr>
+        <th>Action</th>
+        <th>Tool</th>
+        <th>Requested By</th>
+        <th>Reason For Request</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for res in reservations %}
+      <tr>
+        <td><a class="btn btn-success btn-xs" href="/toolshare/acceptrequest/{{ res.id }}/">Accept</a>&nbsp;&nbsp;&nbsp;
+            <a class="btn btn-danger btn-xs" href="/toolshare/denyrequest/{{ res.id }}/">Deny</a>
+        </td>
+        <td><a href="/toolshare/view/{{ res.tool.id }}/">{{res.tool.name}}</a></td>
+        <td>{{res.borrower}}</td>
+        <td>{{res.reason}}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endif %}
+{% endblock %}

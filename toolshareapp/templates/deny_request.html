@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="page-header">Reason for denying borrow request</h1>
+
+<form action="" method="post" xmlns="http://www.w3.org/1999/html">
+    {% csrf_token %}
+
+	<input id="id_content" class="form-control" maxlength="200" required="" name="content" type="text" placeholder="Reason"></br>
+    			    <a class="btn btn-default btn-md" href="/toolshare/borrowrequests">Cancel</a>
+    <button class="btn btn-primary" type="submit">Send</button>
+</form>
+
+{% endblock %}

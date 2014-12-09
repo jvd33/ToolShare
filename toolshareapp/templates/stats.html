@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="page-header">Statistics for {{user.community.name}}</h1>
+
+<div class="row">
+    <div class="col-md-6">
+    <h2 class="sub-header">Most recent reservations</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+        {% if data %}
+         {% for k, v in data.items %}
+           {% if v and k == flags.4 %}
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Lender</th>
+                <th>Borrower</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for res in v.values %}
+              <tr>
+                  <td>{{ res.tool }}</td>
+                  <td>{{ res.owner }}</td>
+                  <td>{{ res.borrower }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+           {% endif %}
+         {% endfor %}
+        {% endif %}
+        </table>
+    </div>
+    </div>
+
+    <div class="col-md-6">
+    <h2 class="sub-header">High Scores</h2>
+    <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Achievement</th>
+          <th>Subject</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if data %}
+          {% for k, v in data.items %}
+            <tr>
+                {% if v and k == flags.0 %}
+                  <td>Most active owner</td>
+                  <td>{{v.0}}</td>
+                  <td>{{v.1}} reservations</td>
+            </tr>
+
+            <tr>
+              {% elif v and k == flags.1 %}
+                <td>Most active borrower</td>
+                <td>{{v.0}}</td>
+                <td>{{v.1}} reservations</td>
+            </tr>
+            <tr>
+              {% elif v and k == flags.2 %}
+                <td>Most borrowed tool</td>
+                <td>{{v.0}}</td>
+                <td>{{v.1}} reservations</td>
+            </tr>
+            <tr>
+                {% elif v and k == flags.3 %}
+                  <td>Most active poster</td>
+                  <td>{{v.0}}</td>
+                  <td>{{v.1}} posts</td>
+            </tr>
+                {% endif %}
+          {% endfor %}
+        {% endif %}
+      </tbody>
+    </table>
+    </div>
+    </div>
+
+</div>
+{% endblock %}

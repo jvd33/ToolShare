@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+
+<h1>{{ shed.name }}</h1>
+<p>{{ shed.shed_address }}</p>
+
+{% for tool in tools %}
+<div>
+	<h2><a href="/toolshare/view/{{ tool.id }}/">{{tool.name}}</a></h2>
+	<p>{{tool.description | truncatewords:"10"}}</p>
+	<p><a href="/toolshare/removefromshed/{{tool.id}}">remove</a></p>
+</div>
+{% endfor %}
+
+{% if admin == 1 %}
+<p><a href="/toolshare/updateshed/{{ shed.id }}/">edit</a></p>
+{% endif %}
+
+{% endblock %}

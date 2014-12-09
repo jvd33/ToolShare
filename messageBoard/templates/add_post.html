@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<form action="/board/addpost/" method="post">
+	{% csrf_token %}
+    <textarea class="form-control" cols="40" id="content" name="content" rows="10" placeholder="What's on your mind?"></textarea></br>
+    <a class="btn btn-default" href="/user/home"> Cancel </a>
+    <button class="btn btn-primary" type="submit">Submit Post</button>
+</form>
+
+
+{% endblock %}

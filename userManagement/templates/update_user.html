@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if form.errors %}
+    <script type="text/javascript">
+        var formErrors = [];
+        var regex = /(<([^>]+)>)/ig;
+        var temp;
+    </script>
+
+    {% for field in form %}
+        {% if field.errors %}
+            <script type="text/javascript">
+            temp = '{{field.errors}}';
+            formErrors.push({label:"{{field.label}}",error:temp.replace(regex,"")});
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<h1 class="page-header">Update your user info</h1>
+<div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+
+        <form action="" method="post">
+            {% csrf_token %}
+            {% if next %}
+                <input type="hidden" class="form-control" required="" autofocus="" name="next" value="{{ next }}">
+            {% endif %}
+
+            <label class="control-label" for="id_zipcode">Zipcode</label>
+            <input id="id_zipcode" class="form-control" maxlength="5" name="zipcode" type="text" placeholder="zipcode" value="{{user.zipcode}}"></br>
+
+            <label class="control-label" for="id_address">Address</label>
+            <input id="id_address" class="form-control" maxlength="100" name="address" type="text" placeholder="Address" value="{{user.address}}" ></br>
+            <center>
+            <div class="col-sm-6">
+			    <a class="btn btn-default btn-md" href="/user/home">&nbsp;&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </div>
+            <div class="col-sm-6">
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+            </center>
+			<center>
+			<div style="margin-top: 60px">
+				<a href="/user/changepassword">Change Password</a>
+			<div>
+			</center>
+        </form>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                handleError("Address",formErrors,"#id_address")
+                handleError("Zipcode",formErrors,"#id_zipcode")
+            });
+        </script>
+    </div>
+</div>
+{% endblock %}
+

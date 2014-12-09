@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+ <html lang="en">
+
+ <head>
+     {% load staticfiles %}
+ 	<title>{% block title %}ToolShare{% endblock %}</title>
+
+ 	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{% static 'bootstrap.js' %}"></script>
+ </head>
+
+<body>
+    <div class="container">
+         <br>
+         <br>
+        {% if form.errors %}
+            <script type="text/javascript">
+                var formErrors = [];
+                var regex = /(<([^>]+)>)/ig;
+                var temp;
+            </script>
+
+            {% for field in form %}
+                {% if field.errors %}
+                    <script type="text/javascript">
+                    temp = '{{field.errors}}';
+                    formErrors.push({label:"{{field.label}}",error:temp.replace(regex,"")});
+                    </script>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+         <h1 class="page-header">Create a new community</h1>
+         <div class="row">
+            <div class="col-sm-4"></div>
+  			<div class="col-sm-4">
+                <form action="/toolshare/newCommunity/" method="post">
+                    {% csrf_token %}
+
+                    <label class="control-label" for="id_name">Community Name</label>
+                    <script type="text/javascript">handleError("Name",formErrors)</script>
+                    <input id="id_name" class="form-control" maxlength="30" name="name" type="text" placeholder="ex: Rochester Institute of Technology"><br>
+
+                    <label class="control-label" for="id_zipcode">Zipcode</label>
+                    <script type="text/javascript">handleError("Zipcode",formErrors)</script>
+                    <input id="id_zipcode" class="form-control" min="5" maxlength="5" name="zipcode" type="text" placeholder="ex: 14623"><br>
+                    <button class="btn btn-lg btn-primary btn-block " type="submit">Create Community</button>
+                </form>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        handleError("Name",formErrors,"#id_name")
+                        handleError("Zipcode",formErrors,"#id_zipcode")
+                    });
+                </script>
+            </div>
+         </div>
+    </div>
+</body>

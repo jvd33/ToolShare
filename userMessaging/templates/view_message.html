@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h3>{{ message.subject }}</h3>
+</div>
+
+<div class="jumbotron wraptext">
+  <div class="row">
+    <div class="col-sm-4"><h5>{{message.sender}} to {{message.receiver}}</h5></div>
+  	<div class="col-sm-4"></div>
+    <div class="col-sm-4 text-right"><h5>{{message.date_sent}}</h5></div>
+  </div>
+  {% if message.sent_by_system %}
+  <p>{{message.contents | safe}}</p>
+  {% else %}
+  <p>{{message.contents}}</p>
+  {% endif %}
+
+</div>
+
+
+    <div class="text-right">
+        <a class="text-left btn btn-default btn-sm" href="/user/inbox">&nbsp;&nbsp;&nbsp;&nbsp;Inbox&nbsp;&nbsp;&nbsp;&nbsp;</a>
+    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#delete-{{post.id}}"><i class="fa fa-trash"></i> Delete Message?</button>
+    <div id="delete-{{post.id}}" class="modal fade bs-example-modal-sm"  role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+      <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header text-left">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">ToolShare</h4>
+            </div>
+            <div class="modal-body text-left">
+                Are you sure you want to delete this message?
+            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <a href="/user/delete/{{message.id}}/" class="btn btn-primary">Delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+{% endblock %}
+

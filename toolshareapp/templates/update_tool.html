@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+    {% if form.errors %}
+        <script type="text/javascript">
+            var formErrors = [];
+            var regex = /(<([^>]+)>)/ig;
+            var temp;
+        </script>
+
+        {% for field in form %}
+            {% if field.errors %}
+                <script type="text/javascript">
+                temp = '{{field.errors}}';
+                formErrors.push({label:"{{field.label}}",error:temp.replace(regex,"")});
+                </script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+
+<h1 class="page-header">Update tool info for {{tool.name}}</h1>
+<form action="" method="post" xmlns="http://www.w3.org/1999/html">
+
+    {% csrf_token %}
+    {% if next %}
+        <input type="hidden" class="form-control" required="" autofocus="" name="next" value="{{ next }}">
+    {% endif %}
+
+    <label class="control-label" for="id_name">Tool name</label>
+	<input id="id_name" class="form-control" maxlength="50" name="name" type="text" placeholder="Tool name" value="{{tool.name}}"></br>
+
+    <label class="control-label" for="id_pickup_arrangements">Pickup arrangements</label>
+    <input id="id_pickup_arrangements" class="form-control" maxlength="100" name="pickup_arrangements" type="text" placeholder="Pickup arrangements" value="{{tool.pickup_arrangements}}" ></br>
+
+    <label class="control-label" for="id_description">Description</label>
+    <input id="id_description" class="form-control" maxlength="200" name="description" type="text" placeholder="Description" value="{{tool.description}}"></br>
+
+    <label class="control-label" for="id_shed">Shed</label>
+    <select id="id_shed" class="form-control" name="shed" value="{{tool.shed.id}}">
+    <option value="{{tool.shed.id}}" selected="selected">{{tool.shed.name}}</option>
+    {% for shed in sheds %}
+        <option value="{{shed.id}}">{{shed.name}}</option>
+    {% endfor %}
+    </select>
+    </br>
+    <a class="btn btn-default" href="/toolshare/mytools"> Cancel </a>
+    <button class="btn btn-primary" type="submit">Update Tool</button>
+
+
+
+</form>
+<script type="text/javascript">
+    $(document).ready(function () {
+        handleError("Name",formErrors,"#id_name")
+        handleError("Pickup arrangements",formErrors,"#id_pickup_arrangements")
+        handleError("Description",formErrors,"#id_description")
+        handleError("Shed",formErrors,"#id_shed")
+    });
+</script>
+
+
+{% endblock %}

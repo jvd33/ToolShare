@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if form.errors %}
+    <script type="text/javascript">
+        var formErrors = [];
+        var regex = /(<([^>]+)>)/ig;
+        var temp;
+    </script>
+
+    {% for field in form %}
+        {% if field.errors %}
+            <script type="text/javascript">
+            temp = '{{field.errors}}';
+            formErrors.push({label:"{{field.label}}",error:temp.replace(regex,"")});
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<h1 class="page-header">Create a new shed</h1>
+ <div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+        <form action="/toolshare/registershed/" method="post">
+            {% csrf_token %}
+
+            <label class="control-label" for="id_name">Shed name</label>
+            <input id="id_name" class="form-control" maxlength="50" name="name" type="text" placeholder="ex: Dan's Shed"></br>
+
+            <label class="control-label" for="id_shed_address">Shed address</label>
+            <input id="id_shed_address" class="form-control" maxlength="50" name="shed_address" type="text" placeholder="ex: 123 Lomb Memorial Drive"></br>
+
+            <center>
+            <div class="col-sm-6">
+			    <a class="btn btn-default btn-md" href="/toolshare/mytools">&nbsp;&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </div>
+            <div class="col-sm-6">
+			    <button class="btn btn-primary btn-md" type="submit">Create Shed</button>
+            </div>
+            </center>
+            <br>
+        </form>
+        <script type="text/javascript">
+            $(document).ready(function () {
+            handleError("Name",formErrors,"#id_name")
+            handleError("Shed address",formErrors,"#id_shed_address")
+        });
+        </script>
+
+    </div>
+ </div>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<h1 class="page-header">Register a Tool</h1>
+
+<form action="/toolshare/registertool/" method="post" xmlns="http://www.w3.org/1999/html">
+	{% if form.errors %}
+        <script type="text/javascript">
+            var formErrors = [];
+            var regex = /(<([^>]+)>)/ig;
+            var temp;
+        </script>
+
+        {% for field in form %}
+            {% if field.errors %}
+                <script type="text/javascript">
+                temp = '{{field.errors}}';
+                formErrors.push({label:"{{field.label}}",error:temp.replace(regex,"")});
+                </script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% csrf_token %}
+    {% if next %}
+        <input type="hidden" class="form-control" required="" autofocus="" name="next" value="{{ next }}">
+    {% endif %}
+
+    <label class="control-label" for="id_name">Tool name</label>
+	<input id="id_name" class="form-control" maxlength="50" name="name" type="text" placeholder="ex: The Best Hammer"></br>
+
+    <label class="control-label" for="id_pickup_arrangements">Pickup arrangements</label>
+    <input id="id_pickup_arrangements" class="form-control" maxlength="100" name="pickup_arrangements" type="text" placeholder="ex: Come to my door please."></br>
+
+    <label class="control-label" for="id_description">Description</label>
+    <input id="id_description" class="form-control" maxlength="200" name="description" type="text" placeholder="ex: This hammer is the best."></br>
+
+    <label class="control-label" for="id_shed">Shed</label>
+    <select id="id_shed" class="form-control" name="shed">
+    <option value="" selected="selected">Please Select a Shed</option>
+    {% for shed in sheds %}
+        <option value="{{shed.id}}">{{shed.name}}</option>
+    {% endfor %}
+    </select>
+    </br>
+    <a class="btn btn-default pull-right" href="/toolshare/mytools"> Cancel </a>
+	<button class="btn btn-primary pull-right" type="submit">Create Tool</button>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        handleError("Name",formErrors,"#id_name")
+        handleError("Pickup arrangements",formErrors,"#id_pickup_arrangements")
+        handleError("Description",formErrors,"#id_description")
+        handleError("Shed",formErrors,"#id_shed")
+    });
+</script>
+
+{% endblock %}
+

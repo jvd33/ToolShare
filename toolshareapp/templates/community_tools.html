@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load sort_tags %}
+
+{% block content %}
+<h1>Tools in {{user.community.name}}</h1>
+<table class="table table-striped table-hover ">
+    <thead>
+      <tr>
+        <th><a href="?{% sort_url 'order_by' 'name' %}">Tool</a></th>
+        <th>Description</th>
+        <th><a href="?{% sort_url 'order_by' 'borrower' %}">Status</a></th>
+        <th><a href="?{% sort_url 'order_by' 'owner' %}">Owner</a></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if has_tools %}
+        {% for tool in tools %}
+          <tr>
+            <td><a href="/toolshare/view/{{ tool.id }}/">{{tool.name}}</a></td>
+            <td>{{tool.description | truncatewords:"10"}}</td>
+            {% if tool.borrower == None %}
+            <td><p class="text-success">Available</p></td>
+            {% else %}
+            <td><p class="text-danger">Borrowed</p></td>
+            {% endif %}
+            <td>{{tool.owner}}</td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+</table>
+{% endblock %}
+

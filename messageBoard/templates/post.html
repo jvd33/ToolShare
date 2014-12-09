@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+    <p><a href="/user/home">Home</a></p>
+	<a href="/board/posts/">back</a>
+{% endblock %}
+
+{% block content %}
+{% if user.username == post.poster.username %}
+<a href="/board/delete/{{post.id}}">Delete post</a>
+{% endif %}
+{% if user == post.community.admin %}
+<a href="/board/delete/{{post.id}}">Delete post</a>
+{% endif %}
+
+<h2>Posted by <a href="/user/view/{{ user.id }}/">{{user.username}}</a> on {{post.timestamp_post}}</h2>
+
+<p>{{ post.content }}</p>
+
+{% endblock %}

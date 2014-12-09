@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+ <html lang="en">
+ <head>
+     {% load staticfiles %}
+ 	<title>{% block title %}ToolShare{% endblock %}</title>
+
+ 	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{% static 'bootstrap.js' %}"></script>
+ </head>
+
+<body>
+    <div class="container">
+         <div class="row">
+             <br>
+            {% if form.errors %}
+                <script type="text/javascript">
+                    var formErrors = [];
+                    var regex = /(<([^>]+)>)/ig;
+                    var temp;
+                    function handleError(value,errors,id){
+                        for (var i = 0; i<errors.length;i++){
+                            if (value == errors[i].label){
+                                var temp = "<br>"+"<font color='red'>"+errors[i].error+"</font>";
+                                document.querySelector(id).insertAdjacentHTML("beforebegin",temp)
+                            }
+                        }
+                    };
+                </script>
+
+                {% for field in form %}
+                    {% if field.errors %}
+                        <script type="text/javascript">
+                        temp = '{{field.errors}}';
+                        formErrors.push({label:"{{field.label}}",error:temp.replace(regex,"")});
+                        </script>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <h1 class="page-header">Register for ToolShare</h1>
+            <div class="col-sm-4"></div>
+  			<div class="col-sm-4">
+            {% block content %}
+                <form class="form-horizontal" action="/user/register/" method="post">
+                    <h3 class="form-signin-heading">Enter information to register an account</h3>
+
+                    {% csrf_token %}
+                    {% if next %}
+                        <input type="hidden" class="form-control" required="" autofocus="" name="next" value="{{ next }}">
+                    {% endif %}
+                    <label class="control-label" for="id_username">Username</label>
+                    <input id="id_username" maxlength="30" name="username" type="text" placeholder="Username: letters, digits and @/./+/-/_ only" class="form-control">
+
+                    <label class="control-label" for="id_address">Address</label>
+                    <input id="id_address"  name="address" type="text" placeholder="ex: 100 Lomb Memorial Drive" class="form-control">
+
+                    <label class="control-label" for="id_zipcode">Zipcode</label>
+                    <input id="id_zipcode"  maxlength="5" name="zipcode" type="text" placeholder="ex: 14623" class="form-control">
+
+                    <label class="control-label" for="id_age">Birthdate</label>
+                    <input id="id_age" name="age" type="date" placeholder="mm/dd/yyyy" class="form-control">
+
+                    <label class="control-label" for="id_password1">Password</label>
+                    <input id="id_password1" name="password1" type="password" placeholder=""  class="form-control">
+
+                    <label class="control-label" for="id_password2">Confirmed Password</label>
+                    <input id="id_password2" name="password2" type="password" placeholder="" class="form-control"><br>
+
+                    <div class="row text-center">
+                        <div class="col-sm-6">
+                            <a class="btn btn-default btn-md" href="/toolshare/mytools">&nbsp;&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-md btn-primary" type="submit">Submit</button>
+                        </div>
+                    </div>
+                </form>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        handleError("Username",formErrors,"#id_username")
+                        handleError("Address",formErrors,"#id_address")
+                        handleError("Zipcode",formErrors,"#id_zipcode")
+                        handleError("Age",formErrors,"#id_age")
+                        handleError("Password",formErrors, "#id_password1")
+                        handleError("Password confirmation",formErrors, "#id_password2")
+                    });
+                </script>
+
+            {% endblock %}
+            </div>
+         </div>
+    </div> <!-- /container -->
+</body>

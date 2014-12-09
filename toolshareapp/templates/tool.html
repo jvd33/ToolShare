@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<center>
+    <div class="page-header">
+        <h1>{{ tool.owner.username }}'s {{ tool.name }}</h1>
+    </div>
+</center>
+
+<center><h4>is in the {{ tool.shed }} shed at {{ address }} in the {{ tool.community }} </h4></center>
+
+<div class="jumbotron wraptext">
+    {% if tool.borrower %}
+    <h5>Currently held by {{ tool.borrower.username }}</h5>
+    {% else %}
+    <h5>Currently held by {{ tool.owner.username }} </h5>
+    {% endif %}
+    <p>{{ tool.description }}</p>
+    <h5>Pickup arrangements: {{tool.pickup_arrangements}}</h5>
+</div>
+<center>
+<div class="row">
+
+    {% if tool.owner.username == curr_user.username%}
+        <div class="col-sm-4">
+            <a class="btn btn-info btn-lg btn-block" href="/toolshare/updatetool/{{tool.id}}/">Edit</a></p>
+        </div>
+        <div class="col-sm-4">
+            <p><a class="btn btn-primary btn-lg btn-block" href="/toolshare/reservetools/{{tool.id}}/">Set Blackout Date</a></p>
+        </div>
+    	{% if tool.is_active%}
+        <div class="col-sm-4">
+            <button type="button" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#deact-{{tool.id}}">Deactivate</button>
+        </div>
+    	{% else %}
+        <div class="col-sm-4">
+           <a class="btn btn-success btn-lg btn-block" href="/toolshare/activate/{{ tool.id }}/">Activate</a>
+	    {% endif %}
+        </div>
+
+    {% elif is_admin %}
+        <div class="col-sm-4">
+            <a class="btn btn-info btn-lg btn-block" href="/toolshare/updatetool/{{tool.id}}/">Edit</a></p>
+        </div>
+        <div class="col-sm-4">
+            <p><a class="btn btn-primary btn-lg btn-block" href="/toolshare/reservetools/{{tool.id}}/">Reserve</a></p>
+        </div>
+
+    	{% if tool.is_active%}
+        <div class="col-sm-4">
+            <button type="button" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#deact-{{tool.id}}">Deactivate</button>
+
+	    </div>
+        {% else %}
+        <div class="col-sm-4">
+           <a class="btn btn-success btn-lg btn-block" href="/toolshare/activate/{{ tool.id }}/">Activate</a>
+        </div>
+	    {% endif %}
+
+    {% else %}
+        <div class="col-sm-4">
+
+        </div>
+        <div class="col-sm-4">
+            <p><a class="btn btn-primary btn-lg btn-block" href="/toolshare/reservetools/{{tool.id}}/">Reserve</a></p>
+        </div>
+        <div class="col-sm-4">
+
+        </div>
+    {% endif %}
+
+    <div id="deact-{{tool.id}}" class="modal fade bs-example-modal-sm"  role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">ToolShare</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to deactivate this tool? You will be unable to share it with others until you reactivate the tool.
+            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <a href="/toolshare/deactivate/{{ tool.id }}/" class="btn btn-primary">Deactivate</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <br> </br>
+    <br> </br>
+    <table class="table table-striped table-hover ">
+
+        <thead>
+          <tr>
+            <th class="col-md-2">To be Borrowed by</th>
+            <th class="col-md-2">Owner Response</th>
+            <th class="col-md-2">Start Date</th>
+            <th class="col-md-2">End Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
+            {% for res in reservations %}
+              <tr>
+                <td>{{res.borrower}}</td>
+
+                {% if res.approved == True %}
+                <td><p class="text-success">Approved</p></td>
+                {% else %}
+                <td><p class="text-danger">Awaiting response</p></td>
+                {% endif %}
+
+                <td>{{res.borrow_request_date}} </td>
+                <td>{{res.return_date}}</td>
+                <!--<td><p>{{res.reason | truncatewords:"10"}}</p></td>-->
+              </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+</center>
+{% endblock %}

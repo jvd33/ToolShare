@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if form.errors %}
+    <script type="text/javascript">
+        var formErrors = [];
+        var regex = /(<([^>]+)>)/ig;
+        var temp;
+    </script>
+
+    {% for field in form %}
+        {% if field.errors %}
+            <script type="text/javascript">
+            temp = '{{field.errors}}';
+            formErrors.push({label:"{{field.label}}",error:temp.replace(regex,"")});
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+
+<h1 class="page-header">Update shed info for {{shed.name}}</h1>
+<div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+        <form action="" method="post">
+            {% csrf_token %}
+            {% if next %}
+                <input type="hidden" class="form-control" required="" autofocus="" name="next" value="{{ next }}">
+            {% endif %}
+
+            <label class="control-label" for="id_name">Shed name</label>
+            <input id="id_name" class="form-control" maxlength="50" name="name" type="text" value="{{shed.name}}"><br>
+
+            <label class="control-label" for="id_shed_address">Shed Address</label>
+            <input id="id_shed_address" class="form-control" maxlength="50" name="shed_address" type="text" value="{{shed.shed_address}}"></br>
+
+            <center>
+            <div class="col-sm-3">
+			    <a class="btn btn-default btn-md" href="/toolshare/viewsheds">&nbsp;&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+                <button class="btn btn-primary" type="submit">Update Shed</button>
+            </div>
+            </center>
+        </form>
+        <script type="text/javascript">
+            $(document).ready(function () {
+            handleError("Name",formErrors,"#id_name")
+            handleError("Shed address",formErrors,"#id_shed_address")
+        });
+        </script>
+
+    </div>
+</div>
+{% endblock %}

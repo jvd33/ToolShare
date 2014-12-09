@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="page-header">Your sheds in {{user.community.name}}</h1>
+
+{% for shed in sheds %}
+    <h2 class="sub-header">{{shed.name}}</h2>
+    <p>address: {{shed.shed_address}}</p>
+    <a class="btn btn-primary btn-sm" href="/toolshare/updateshed/{{shed.id}}">Edit this shed</a><br><br>
+    <table class="table table-striped table-hover ">
+        <thead>
+          <tr>
+            <th class="col-md-2">Tool</th>
+            <th class="col-md-3">Description</th>
+            <th class="col-md-2">Status</th>
+            <th class="col-md-2">Owner</th>
+            <th class="col-md-2">Held by</th>
+            <th class="col-md-2"></th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for tool in shed.get_tools %}
+              <tr>
+                <td><a href="/toolshare/view/{{ tool.id }}/">{{tool.name}}</a></td>
+                <td>{{tool.description | truncatewords:"10"}}</td>
+                {% if tool.borrower == None %}
+                <td><p class="text-success">Available</p></td>
+                {% else %}
+                <td><p class="text-danger">Borrowed</p></td>
+                {% endif %}
+                <td>{{tool.owner}}</td>
+                {% if tool.borrower %}
+                <td>{{ tool.borrower.username }}</td>
+                {% else %}
+                <td>{{tool.owner}}</td>
+                {% endif %}
+                <td><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#remove-{{tool.id}}">Remove</button></td>
+                <div id="remove-{{tool.id}}" class="modal fade bs-example-modal-sm"  role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title">ToolShare</h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to remove this tool?
+                            It removes the user's tool from the {{shed.name}} shed and assigns it to their home shed.
+                        </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <a href="/toolshare/removefromshed/{{tool.id}}" class="btn btn-primary">Remove</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+
+{% endfor %}
+
+{% endblock %}

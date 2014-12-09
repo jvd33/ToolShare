@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load sort_tags %}
+{% block content %}
+
+<h1>My Tools in {{user.community.name}}</h1>
+<table class="table table-striped table-hover ">
+    <thead>
+      <tr>
+        <th><a href="?{% sort_url 'order_by' 'name' %}">Tool</a></th>
+        <th>Description</th>
+        <th><a href="?{% sort_url 'order_by' 'borrower__username' %}">Who is holding the tool?</a></th>
+        <th><a href="?{% sort_url 'order_by' 'shed__name' %}">Where it is shared from?</a></th>
+        <th><a href="?{% sort_url 'order_by' 'borrower' %}">Status</a></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for tool in tools %}
+          <tr>
+            <td><a href="/toolshare/view/{{ tool.id }}/">{{tool.name}}</a></td>
+            <td>{{tool.description | truncatewords:"10"}}</td>
+            {% if tool.borrower %}
+            <td>{{ tool.borrower.username }}</td>
+            {% else %}
+            <td>You have the tool</td>
+            {% endif %}
+            <td>{{tool.shed}}</td>
+            {% if tool.borrower == None %}
+            <td><p class="text-success">Available</p></td>
+            {% else %}
+            <td><p class="text-danger">Borrowed</p></td>
+            {% endif %}
+            {% if tool.is_active == True %}
+                <td><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deact-{{tool.id}}">Deactivate</button></td>
+                <div id="deact-{{tool.id}}" class="modal fade bs-example-modal-sm"  role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title">ToolShare</h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to deactivate this tool? You will be unable to share it with others until you reactivate the tool.
+                        </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <a href="/toolshare/deactivate/{{ tool.id }}/" class="btn btn-primary">Deactivate</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            {% else %}
+            <td><a class="btn btn-success btn-sm" href="/toolshare/activate/{{ tool.id }}/">&nbsp;&nbsp;&nbsp;Activate&nbsp;&nbsp;&nbsp;</a></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

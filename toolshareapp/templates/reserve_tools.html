@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+        <form action="/toolshare/reservetools/{{ tool.id }}/" method="post">
+            {% csrf_token %}
+
+            {% if error = 1%}
+                <div class="alert alert-dismissable alert-danger">
+                     <button type="button" class="close" data-dismiss="alert">×</button>
+                     <p>Please make sure all fields are filled in and correct</p>
+                </div>
+            {% elif error = 4 %}
+                <div class="alert alert-dismissable alert-danger">
+                     <button type="button" class="close" data-dismiss="alert">×</button>
+                     <p>The return date must be later than the borrow request date.</p>
+                </div>
+            {% elif error = 5 %}
+                <div class="alert alert-dismissable alert-danger">
+                     <button type="button" class="close" data-dismiss="alert">×</button>
+                     <p>This tool is already reserved during this time. Please try a different date.</p>
+                </div>
+            {% endif %}
+
+            {% if status%}
+            <h1>{{status}}</h1>
+            {% endif %}
+
+            {% if status == "Tool requested." or status == "Sorry some one is already borrowing that tool." or status == "Sorry you cant borrow your own tool." or status == "Tool reservation accepted." or status == "Tool reservation denied." or status == "Tool reserve requested."%}
+
+            {% else %}
+
+            <div class="input-append date form_datetime" data-date="{{datetime.now}}">
+                <label for="id_borrow_request_date">Borrow request date</label>
+                <input id="id_borrow_request_date" class="form-control" name="borrow_request_date" type="text" placeholder="Click for calendar..." readonly><br>
+                <span class="add-on"><i class="icon-remove"></i></span>
+                <span class="add-on"><i class="icon-th"></i></span>
+            </div>
+
+            <div class="input-append date form_datetime" data-date="{{datetime.now}}">
+                <label for="id_return_date">Return date</label>
+                <input id="id_return_date" name="return_date" class="form-control" type="text" placeholder="Click for calendar..." readonly><br>
+                <span class="add-on"><i class="icon-remove"></i></span>
+                <span class="add-on"><i class="icon-th"></i></span>
+            </div>
+
+            <script type="text/javascript">
+                $(".form_datetime").datetimepicker({
+                    format: "mm/dd/yyyy hh:ii",
+                    showMeridian: true,
+                    autoclose: true,
+                    todayBtn: true
+                });
+            </script>
+
+            <label for="id_reason">Reason</label>
+            <input id="id_reason" maxlength="500" name="reason"  class="form-control" type="text"><br>
+
+            <center>
+            <div class="col-sm-6">
+                <a class="btn btn-default" href="/toolshare/communitytools">&nbsp;&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </div>
+            <div class="col-sm-6">
+                <button class="btn btn-primary" type="submit">Reserve Tool</button>
+            </div>
+            </center>
+
+        </form>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

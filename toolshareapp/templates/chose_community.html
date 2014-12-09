@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+ <div class="row">
+    <div class="col-sm-4 changecommside">
+        <div class="btn-group btn-block">
+
+        <a class="col-sm-12 btn btn-lg btn-block btn-info" href="/toolshare/newCommunity">Create a new community</a>
+
+        <center><br><br><br><h1>or</h1><br></center>
+
+        <button class="col-sm-12 btn btn-lg btn-block btn-primary" data-toggle="dropdown">Join a community &nbsp;<span class="caret"></span></button>
+        <ul class="dropdown-menu btn-block">
+        {% if coms %}
+            {% for com in coms %}
+                    {% if user.community.name != com.name %}
+                        <a class="btn btn-lg btn-block btn-primary" href="/toolshare/select/{{com.id}}">{{com.name}}</a>
+                    {% endif %}
+            {% endfor %}
+        </ul>
+
+        {% else %}
+                <a class="col-sm-12 btn btn-lg btn-block btn-info" href="/toolshare/newCommunity">Create a new community</a>
+        {% endif %}
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <div class="page-header">
+            <h1>Changing a community in ToolShare</h1>
+            <h3>You are in {{user.community}}</h3>
+        </div>
+        <h4>
+            Changing a community will move all your tools to a new community, cancel all future reservations on any of your tools (and alert the borrowers),
+            and sends a message to any borrower that currently has a tool of yours. You may need to coordinate with any current borrowers of your tools.
+        </h4>
+        <h4>
+            A community is for sharing tools within a certain zone. Choose a community that fits your location so that you can share tools easily between your
+            house or within nearby sheds.
+        </h4>
+        <h4>
+            If you want to create a new community make sure it is a large enough zone that people want to join it. Good community zones are neighborhoods,
+            schools, and workplaces.
+        </h4>
+    </div>
+ </div>
+{% endblock %}

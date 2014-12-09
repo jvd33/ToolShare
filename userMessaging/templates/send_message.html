@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<left>  <h1 class="page-header">Send a Message</h1> </left>
+
+{% if form.errors %}
+    <script type="text/javascript">
+        var formErrors = [];
+        var regex = /(<([^>]+)>)/ig;
+        var temp;
+    </script>
+
+    {% for field in form %}
+        {% if field.errors %}
+            <script type="text/javascript">
+            temp = '{{field.errors}}';
+            formErrors.push({label:"{{field.label}}",error:temp.replace(regex,"")});
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% if warn %}
+<div class="alert alert-dismissable alert-danger">
+  <button type="button" class="close" data-dismiss="alert">×</button>
+  <p>{{ warn }}</p>
+</div>
+{% endif %}
+
+<form action="/user/newmessage/" method="post">
+
+    {% csrf_token %}
+    {% if next %}
+        <input type="hidden" class="form-control" required="" autofocus="" name="next" value="{{ next }}">
+    {% endif %}
+
+    <label class="control-label" for="id_subject">Subject</label>
+	<input id="id_subject" class="form-control" maxlength="100" name="subject" type="text" placeholder="ex: I have a question"><br>
+
+    <label class="control-label" for="id_contents">Contents</label>
+    <textarea cols="40" id="id_contents" class="form-control" name="contents" rows="10" placeholder="ex: Can you tell me . . ."></textarea><br>
+
+    <label class="control-label" for="id_receiver">Recipient</label>
+    <select id="id_receiver" class="form-control" name="receiver"><br>
+    <option value="" selected="selected">Please Select a Recipient</option>
+    {% for user in users %}
+        <option value="{{user.id}}">{{user.username}}</option>
+    {% endfor %}
+    </select>
+    </br>
+    <a class="btn btn-default pull-right" href="/user/inbox"> Cancel </a>
+    <button class="btn btn-primary pull-right" type="submit">Send Message</button>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        handleError("Subject",formErrors,"#id_subject")
+        handleError("Contents",formErrors,"#id_contents")
+        handleError("Receiver",formErrors,"#id_receiver")
+    });
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block sidebar %}
+	<p><a href="/user/home">Home</a></p>
+    <p><a href="/board/addpost">Add Post</a></p>
+
+{% endblock %}
+
+{% block content %}
+<h1>Posts</h1>
+{% for post in posts %}
+<div>
+	<h2><a href="/board/view/{{ post.id }}/">{{post.content}}</a></h2>
+</div>
+
+{% endfor %}
+{% endblock %}

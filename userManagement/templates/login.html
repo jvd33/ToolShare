@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+ <html lang="en">
+
+ <head>
+     {% load staticfiles %}
+ 	<title>{% block title %}ToolShare{% endblock %}</title>
+
+ 	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{% static 'bootstrap.js' %}"></script>
+ </head>
+
+<body>
+    <div class="container">
+
+
+<!-- printing out success messages -->
+{% if messages %}
+    {% for message in messages %}
+        <br> </br>
+        <div class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ message }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+
+
+        <!--{% if messages %}-->
+
+            <!--{% for message in messages %}-->
+
+        <!--{% for tag in message.tags %}-->
+        <!--<div class="alert alert-dismissable alert-{{tag}}">-->
+        <!--{% endfor %}-->
+        <!--<button type="button" class="close" data-dismiss="alert">x</button>-->
+        <!--<p>{{notify}}</p>-->
+        <!--</div>-->
+
+            <!--{% endfor %}-->
+        <!--{% endif %}-->
+
+         <h1 class="page-header">Log in to ToolShare</h1>
+         <div class="row text-center">
+            <div class="col-sm-4"></div>
+  			<div class="col-sm-4">
+              {% block content %}
+                <br>
+                {% if state != "Log in:" %}
+                <div class="alert alert-dismissable alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    {{ state }}
+                </div>
+                {% endif %}
+
+
+                <form class="form-signin" role="form" action="/user/login/" method="post">
+                  {% csrf_token %}
+                  {% if next %}
+                    <input type="hidden" class="form-control" required="" autofocus="" name="next" value="{{ next }}">
+                  {% endif %}
+
+                  <label class="control-label" for="username">Username</label>
+                  <input id="username" type="text" class="form-control" placeholder="ex: Dan" type="text" name="username" value="{{ username}}"><br>
+
+                  <label class="control-label" for="password">Password</label>
+                  <input id="password" type="password" class="form-control" placeholder="" type="text" name="password" value=""><br>
+
+                  <div class="row text-center">
+                    <div class="col-sm-6">
+                        <a class="btn btn-md btn-default" href="/"> Cancel </a>
+                    </div>
+                    <div class="col-sm-6">
+                        <button class="btn btn-md btn-primary" type="submit">Log in</button>
+                    </div>
+                  </div>
+                </form>
+              {% endblock %}
+            </div>
+         </div>
+    </div> <!-- /container -->
+</body>
